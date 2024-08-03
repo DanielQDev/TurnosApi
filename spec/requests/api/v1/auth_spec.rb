@@ -4,17 +4,19 @@ RSpec.describe "Api::V1::Auths", type: :request do
   let(:user) { FactoryBot.build(:user) }
 
   describe "POST /signin" do
-    # it "returns http success" do
-    #   params = {
-    #     user: {
-    #       "email": user.email,
-    #       "password": user.password
-    #     }
-    #   }
-    #   post "/api/v1/signin", params: params, as: :json
-    #   expect(JSON.parse(response.body)['authorization']).not_to be_nil
-    #   expect(response).to have_http_status(:success)
-    # end
+    it "returns http success" do
+      params = {
+        user: {
+          "email": user.email,
+          "password": user.password
+        }
+      }
+
+      post "/api/v1/signin", params: params, as: :json
+
+      expect(JSON.parse(response.body)['authorization']).not_to be_nil
+      expect(response).to have_http_status(:success)
+    end
 
     it "invalid email, returns http not_found" do
       params = {
