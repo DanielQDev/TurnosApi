@@ -5,7 +5,7 @@ class Api::V1::AuthController < ApplicationController
     if @user&.authenticate(user_params[:password])
       token = set_tokens(@user.id)
 
-			render json: {id: @user.id, authorization: token, email: @user.email, username: @user.first_name}, status: :ok
+			render json: {user: {id: @user.id, email: @user.email, name: @user.first_name}, authorization: token}, status: :ok
     else
       render json: {"msg": "User not found."}, status: :not_found
     end
@@ -19,7 +19,7 @@ class Api::V1::AuthController < ApplicationController
 		if @user.save
       token = set_tokens(@user.id)
 
-			render json: {id: @user.id, authorization: token, email: @user.email, username: @user.first_name}, status: :created
+			render json: {user: {id: @user.id, email: @user.email, name: @user.first_name}, authorization: token}, status: :created
 		else
 			render json: {"msg": "Incorrect registration data"}, status: :unprocessable_entity
 		end
