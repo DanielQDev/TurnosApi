@@ -6,13 +6,26 @@ class Api::V1::ShiftsController < ApplicationController
 
   def index
     @shifts = Shift::GetShifts.new(@current_user, params).all
+
     if @shifts.empty?
-      @shifts = Shift::ShiftGenerator.new(@current_user, params)
+      @shifts = Shift::ShiftGenerator.new(@current_user, params).create
     end
+
     render json: Panko::Response.new(
       data: Panko::ArraySerializer.new(
         @shifts,
         each_serializer: Shifts::ShiftSerializer
+      )
+    ), status: :ok
+  end
+
+  def confirmed
+    @shifts = Shift::GetConfirmedShifts.new(params).all
+
+    render json: Panko::Response.new(
+      data: Panko::ArraySerializer.new(
+        @shifts,
+        each_serializer: Shifts::ConfirmedShiftSerializer
       )
     ), status: :ok
   end
