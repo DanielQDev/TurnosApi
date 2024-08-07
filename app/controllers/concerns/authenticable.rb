@@ -1,4 +1,6 @@
 module Authenticable
+  extend ActiveSupport::Concern
+  
   def current_user
     return @current_user if @current_user
 
@@ -7,7 +9,7 @@ module Authenticable
 
     decode = JsonWebToken.decode(header)
 
-    @current_user = User.find(decode[:user_id]) rescue ActiveRecord::RecordNotFound
+    @current_user = User.find(decode[:id]) rescue ActiveRecord::RecordNotFound
   end
 
   protected
