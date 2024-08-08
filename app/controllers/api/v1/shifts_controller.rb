@@ -1,6 +1,6 @@
 class Api::V1::ShiftsController < ApplicationController
   before_action :set_shift, only: %i[ show update destroy ]
-  before_action :set_current_user, only: %i[index]
+  before_action :set_current_user, only: %i[index confirmed created update show destroy]
 
   include Authenticable
 
@@ -20,7 +20,7 @@ class Api::V1::ShiftsController < ApplicationController
   end
 
   def confirmed
-    @shifts = Shift::GetConfirmedShifts.new(params).all
+    @shifts = Shifts::GetConfirmedShifts.new(params).all
 
     render json: Panko::Response.new(
       data: Panko::ArraySerializer.new(

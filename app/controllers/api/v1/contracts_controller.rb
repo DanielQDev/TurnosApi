@@ -1,5 +1,8 @@
 class Api::V1::ContractsController < ApplicationController
   before_action :set_contract, only: %i[ show update destroy ]
+  before_action :set_current_user, only: %i[index show create update destroy]
+
+  include Authenticable
 
   def index
     @contracts = Contract.all
@@ -54,5 +57,10 @@ class Api::V1::ContractsController < ApplicationController
 
     def contract_params
       params.require(:contract).permit(:start_date, :end_date, :status, :company_id)
+    end
+
+    def set_current_user
+      head :forbidden if current_user.nil?
+      @current_user = current_user
     end
 end

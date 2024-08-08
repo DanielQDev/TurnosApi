@@ -1,6 +1,6 @@
 class Api::V1::SchedulesController < ApplicationController
   before_action :set_schedule, only: %i[ show update destroy ]
-  before_action :set_current_user, only: %i[index]
+  before_action :set_current_user, only: %i[index show create update destroy]
 
   include Authenticable
 
