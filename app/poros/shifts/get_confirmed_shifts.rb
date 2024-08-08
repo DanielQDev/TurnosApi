@@ -1,4 +1,4 @@
-module Shift
+module Shifts
   class GetConfirmedShifts
     def initialize(params)
       @week = params[:week]
@@ -6,7 +6,12 @@ module Shift
     end
 
     def all
-      Shift.where(week: @week, company_id: @company_id)
+      if Shift.availables(@week, @company_id).empty?
+        Shift.where(week: @week, company_id: @company_id)
+      else
+        Shift.confirm(@week, @company_id)
+        Shift.where(week: @week, company_id: @company_id)
+      end
     end
   end
 end
