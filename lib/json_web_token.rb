@@ -1,5 +1,5 @@
 class JsonWebToken
-  SECRET_KEY = "Rails.application.credendials.secret_key_base.to_s"
+  SECRET_KEY = Rails.application.credendials.secret_key_base.to_s
 
   def self.encode(user_id, exp = 24.hours.from_now)
     payload = {id: user_id, exp: exp.to_i}
