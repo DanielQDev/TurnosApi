@@ -1,10 +1,12 @@
 FactoryBot.define do
   factory :shift do
-    start_hour { "2024-08-06 10:15:52" }
-    end_hour { "2024-08-06 10:15:52" }
+    start_hour { "2024-08-06 17:00:00" }
+    end_hour { "2024-08-06 18:00:00" }
     is_confirmed { false }
-    user { nil }
-    schedule { nil }
-    company { nil }
+    is_postulated { false }
+    week { 31 }
+    user
+    schedule
+    company
   end
 end

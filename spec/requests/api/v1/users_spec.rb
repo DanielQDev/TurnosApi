@@ -1,22 +1,21 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Users", type: :request do
-  let(:user) { FactoryBot.build(:user) }
+  let(:user) { FactoryBot.build(:user, id: 1) }
 
   describe "GET /show" do
     context "returns user" do
       it "returns http ok" do
-        id = 1
-        get "/api/v1/users/#{id}"
+        get "/api/v1/users/#{user.id}"
 
         parsed = JSON.parse(response.body)
 
-        expect(parsed).to include('id' => id)
+        expect(parsed).to include('id' => user.id)
         expect(response).to have_http_status(:ok)
       end
 
       it "returns http not_found" do
-        id = 1
+        id = 0
         get "/api/v1/users/#{id}"
 
         parsed = JSON.parse(response.body)
