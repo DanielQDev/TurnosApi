@@ -1,9 +1,10 @@
-module Shift
+module Shifts
   class ShiftGenerator
     def initialize(user, params)
       @user = user
       @week = params[:week]
       @company_id = params[:company_id]
+      @new_shifts = []
     end
 
     def create
@@ -14,6 +15,8 @@ module Shift
           5.times{ generate(schedule) }
         end
       end
+
+      @new_shifts
     end
 
     def get_schedule
@@ -32,6 +35,7 @@ module Shift
         shift.company_id = @company_id
         shift.schedule = schedule.id
         shift.save
+        @new_shifts << shift
         shift_hour = shift.end_hour
       end
     end

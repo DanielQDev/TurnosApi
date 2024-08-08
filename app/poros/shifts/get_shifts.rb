@@ -1,4 +1,4 @@
-module Shift
+module Shifts
   class GetShifts
     def initialize(user,params)
       @user ||= user
