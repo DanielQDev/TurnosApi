@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       
       post '/signin', to: 'auth#signin'
       post '/signup', to: 'auth#signup'
+      get '/confirmed', to: 'shifts#confirmed'
     end
   end
 end
