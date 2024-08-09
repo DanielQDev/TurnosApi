@@ -21,11 +21,10 @@ class Api::V1::ShiftsController < ApplicationController
 
   def confirmed
     @shifts = Shifts::GetConfirmedShifts.new(params).all
-
     render json: Panko::Response.new(
       data: Panko::ArraySerializer.new(
         @shifts,
-        each_serializer: Shifts::ConfirmedShiftSerializer
+        each_serializer: Shifts::ShiftConfirmedSerializer
       )
     ), status: :ok
   end

@@ -1,5 +1,5 @@
 module Shifts
-  class ConfirmedShiftSerializer < BaseSerializer
+  class ShiftConfirmedSerializer < BaseSerializer
     attributes :date,
 
     def date
