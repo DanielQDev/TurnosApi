@@ -1,14 +1,14 @@
 class Api::V1::ShiftsController < ApplicationController
   before_action :set_shift, only: %i[ show update destroy ]
-  before_action :set_current_user, only: %i[index confirmed created update show destroy]
+  before_action :set_current_user, only: %i[index confirmed create update show destroy]
 
   include Authenticable
 
   def index
-    @shifts = Shift::GetShifts.new(@current_user, params).all
+    @shifts = Shifts::GetShifts.new(@current_user, params).all
 
     if @shifts.empty?
-      @shifts = Shift::ShiftGenerator.new(@current_user, params).create
+      @shifts = Shifts::ShiftGenerator.new(@current_user, params).create
     end
 
     render json: Panko::Response.new(
@@ -67,7 +67,7 @@ class Api::V1::ShiftsController < ApplicationController
     end
 
     def set_current_user
-      head :forbidden if current_user.nil?
       @current_user = current_user
+      head :forbidden if current_user.nil?
     end
 end

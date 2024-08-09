@@ -1,12 +1,12 @@
 class Api::V1::CompaniesController < ApplicationController
   before_action :set_company, only: %i[ show update destroy ]
-  before_action :set_current_user, only: %i[index, create, update show destroy]
+  before_action :set_current_user, only: %i[index create update show destroy]
 
   include Authenticable
 
   def index
-    # ids = @current_user.shifts.pluck(:company_id).uniq
-    @companies = Company.all
+    ids = @current_user.shifts.pluck(:company_id).uniq
+    @companies = Company.find(ids)
 
     render json: Panko::Response.new(
       data: Panko::ArraySerializer.new(
