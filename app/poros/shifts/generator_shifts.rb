@@ -1,43 +1,43 @@
 module Shifts
-  class ShiftGenerator
+  class GeneratorShifts
     def initialize(user, params)
       @user = user
       @week = params[:week]
       @company_id = params[:company_id]
-      @new_shifts = []
     end
 
     def create
       get_schedule.each do |schedule|
         if schedule.weekend
-          2.times{ generate(schedule) }
+          days_for_saturday = (6 - (Time.now.wday + 7)) % 7
+          start = Time.now.advance(days: days_for_saturday)
+          2.times do |i|
+            start = start.change(hour: schedule.start_hour.hour)
+            
+            while(start.hour < schedule.end_hour.hour)
+              Shift.create(start_hour: start, end_hour: start.advance(minutes: schedule.duration), week: start.strftime('%U'), user_id: @user.id, schedule_id: schedule.id, company_id: @company.id)
+              start = Shift.last.end_hour
+            end
+            start = start.advance(days: 1)
+          end
         else
-          5.times{ generate(schedule) }
+          days_for_monday = (1 - (Time.now.wday + 7)) % 7
+          start = Time.now.advance(days: days_for_monday)
+          5.times do |i|
+            start = start.change(hour: schedule.start_hour.hour)
+            
+            while(start.hour < schedule.end_hour.hour)
+              Shift.create(start_hour: start, end_hour: start.advance(minutes: schedule.duration), week: start.strftime('%U'), user_id: @user.id, schedule_id: schedule.id, company_id: @company.id)
+              start = Shift.last.end_hour
+            end
+            start = start.advance(days: 1)
+          end
         end
       end
-
-      @new_shifts
     end
 
     def get_schedule
       Contract.find_by(company_id: @company_id).schedules
-    end
-
-    def generate(schedule)
-      shift_hour = schedule.start_hour
-      while(shift_hour < schedule.end_hour)
-        shift = Shift.new
-        shift.start_hour = shift_hour
-        shift.end_hour = shift_hour.advance(minutes: schedule.duration)
-        shift.is_confirmed = false
-        shift.week = @week
-        shift.user_id = @user.id
-        shift.company_id = @company_id
-        shift.schedule = schedule.id
-        shift.save
-        @new_shifts << shift
-        shift_hour = shift.end_hour
-      end
     end
   end
 end
