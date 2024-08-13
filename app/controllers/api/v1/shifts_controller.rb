@@ -1,30 +1,36 @@
 class Api::V1::ShiftsController < ApplicationController
   before_action :set_shift, only: %i[ show update destroy ]
-  before_action :set_current_user, only: %i[index confirmed create update show destroy]
+  before_action :set_current_user, only: %i[ index confirmed weeks create update show destroy]
 
   include Authenticable
 
-  def index
+  def index    
     @shifts = Shifts::GetShifts.new(@current_user, params).all
 
     if @shifts.empty?
-      @shifts = Shifts::ShiftGenerator.new(@current_user, params).create
+      Shifts::GeneratorShifts.new(@current_user, params).create
+      @shifts = Shifts::GetShifts.new(@current_user, params).all
     end
 
-    render json: Panko::Response.new(
-      data: Panko::ArraySerializer.new(
-        @shifts,
-        each_serializer: Shifts::ShiftSerializer
-      )
-    ), status: :ok
+    render json: @shifts, status: :ok
   end
 
   def confirmed
     @shifts = Shifts::GetConfirmedShifts.new(params).all
+    if @shifts.empty?
+      Shift::ConfirmShifts.new(params[:week], params[:company_id]).confirm
+      @shifts = Shifts::GetConfirmedShifts.new(params).all
+    end
+
+    render json: @shifts, status: :ok
+  end
+
+  def weeks
+    @shifts = Shifts::Weeks.new(User.find(1)).all
     render json: Panko::Response.new(
       data: Panko::ArraySerializer.new(
         @shifts,
-        each_serializer: Shifts::ShiftConfirmedSerializer
+        each_serializer: Shifts::WeekSerializer
       )
     ), status: :ok
   end
@@ -45,7 +51,7 @@ class Api::V1::ShiftsController < ApplicationController
 
   def update
     if @shift.update(shift_params)
-      render json: @shift
+      render json: Shifts::ShiftSerializer.new.serialize(@shift).to_json, status: :ok
     else
       render json: @shift.errors, status: :unprocessable_entity
     end
@@ -62,7 +68,7 @@ class Api::V1::ShiftsController < ApplicationController
     end
 
     def shift_params
-      params.require(:shift).permit(:start_hour, :end_hour, :is_confirmed, :user_id, :schedule_id, :company_id)
+      params.require(:shift).permit(:start_hour, :end_hour, :is_confirmed, :is_postulated, :user_id, :schedule_id, :company_id)
     end
 
     def set_current_user
