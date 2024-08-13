@@ -1,17 +1,20 @@
 module Shifts
   class GetConfirmedShifts
     def initialize(params)
-      @week = params[:week]
-      @company_id = params[:company_id]
+      @week ||= get_week(params[:week_number])
+      @company_id ||= get_company(params[:company_id].to_i)
     end
 
     def all
-      if Shift.availables(@week, @company_id).empty?
-        Shift.where(week: @week, company_id: @company_id)
-      else
-        Shift.confirm(@week, @company_id)
-        Shift.where(week: @week, company_id: @company_id)
-      end
+      Shift.by_confirmed_user(@week, @company_id)
+    end
+
+    def get_week(week)
+      week.blank? ? Time.now.strftime('%U') : week
+    end
+
+    def get_company(id)
+      id == 0 ? Company.first.id : id
     end
   end
 end

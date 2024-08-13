@@ -1,6 +1,6 @@
 module Shifts
   class ShiftConfirmedSerializer < BaseSerializer
-    attributes :date,
+    attributes :date
 
     def date
       object.day_format

@@ -1,13 +1,5 @@
 module Shifts
   class ShiftSerializer < BaseSerializer
-    attributes :date, :schedule
-
-    def date
-      object.day_format
-    end
-
-    def schedule
-      Schedule.new(object).summary
-    end
+    attributes :id, :start_hour, :end_hour, :is_confirmed, :is_postulated, :week
   end
 end
