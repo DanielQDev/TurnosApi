@@ -6,9 +6,10 @@ module Shifts
     end
 
     def confirm
-      postulates = Shift.postulate.where(week: @week, company_id: @company_id)
+    
+      postulates = Application.where(company_id: @company_id, is_confirmed: false)
       ingineers = User.find(postulates.pluck(:user_id).uniq)
-      shift_of_week = where(week: @week, company_id: @company_id)
+      shift_of_week = Shift.where(week: @week, company_id: @company_id)
       postulated_hours = postulated(postulates)
       total_monitoring_hours = total_hours(shift_of_week)
   
@@ -83,10 +84,10 @@ module Shifts
       week_hours = []
       weekend_hours = []
       postulates.each do |postulate|
-        if postulate.schedule.weekend
-          weekend_hours << ((postulate.end_hour - postulate.start_hour)/1.hour).round
+        if postulate.shift.schedule.weekend
+          weekend_hours << ((postulate.shift.end_hour - postulate.shift.start_hour)/1.hour).round
         else
-          week_hours << ((postulate.end_hour - postulate.start_hour)/1.hour).round
+          week_hours << ((postulate.shift.end_hour - postulate.shift.start_hour)/1.hour).round
         end
       end
   

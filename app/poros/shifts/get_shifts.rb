@@ -7,6 +7,7 @@ module Shifts
     end
 
     def all
+      # Shift.shifts_by_week(@week, @company_id)
       Shift.for_user(@week, @company_id)
     end
 
@@ -15,7 +16,7 @@ module Shifts
     end
 
     def get_company(id)
-      id == 0 ? @user.shifts.first.company_id : id
+      id == 0 ? Company.last.id : id
     end
     
   end

@@ -1,13 +1,13 @@
 module Shifts
   class ShiftConfirmedSerializer < BaseSerializer
-    attributes :date
+    attributes :id, :start_hour, :end_hour, :week, :user_name, :user_color
 
-    def date
-      object.day_format
+    def user_name
+      object.users.joins(:applications).where(applications: {is_confirmed: true}).first.first_name || ''
     end
 
-    def schedule
-      Schedule.new(object).summary
+    def user_color
+      object.users.joins(:applications).where(applications: {is_confirmed: true}).first.color || ''
     end
   end
 end
