@@ -5,8 +5,8 @@ class Api::V1::CompaniesController < ApplicationController
   include Authenticable
 
   def index
-    ids = @current_user.shifts.pluck(:company_id).uniq
-    @companies = Company.find(ids)
+    # ids = @current_user.shifts.pluck(:company_id).uniq
+    @companies = Company.all
 
     render json: Panko::Response.new(
       data: Panko::ArraySerializer.new(
