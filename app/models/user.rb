@@ -1,5 +1,8 @@
 class User < ApplicationRecord
-  has_many :shifts
+  has_many :applications
+  has_many :shifts, :through => :applications
+  has_many :supports
+  has_many :companies, :through => :supports
   
   has_secure_password
 
