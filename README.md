@@ -21,7 +21,8 @@
 ```
     1. $ rails db:create
     2. $ rails db:migration
-    3. $ rails serve
+    3. $ rails db:seed
+    4. $ rails serve
 ```
 
 ### Run test
